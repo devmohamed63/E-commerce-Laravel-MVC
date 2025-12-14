@@ -15,17 +15,21 @@
                 <h1>New Season. Fresh Fits.</h1>
                 <p>Minimal looks, statement details. Curated for everyday confidence.</p>
                 
+                <div class="hero-cta">
+                    <a href="{{ route('home', ['tag' => 'New', 'sort' => 'featured']) }}" class="hero-btn-primary">Shop New Arrivals</a>
+                    <a href="{{ route('home') }}" class="hero-btn-secondary">Browse All Products</a>
+                </div>
+
                 <div class="gender-tabs">
-                    <button class="gender-tab-btn {{ request('gender', 'all') === 'all' ? 'active' : '' }}" 
-                            onclick="filterByGender('all')">All</button>
                     <button class="gender-tab-btn {{ request('gender') === 'women' ? 'active' : '' }}" 
                             onclick="filterByGender('women')">Women</button>
                     <button class="gender-tab-btn {{ request('gender') === 'men' ? 'active' : '' }}" 
                             onclick="filterByGender('men')">Men</button>
+                    <button class="gender-tab-btn {{ request('gender', 'all') === 'all' ? 'active' : '' }}" 
+                            onclick="filterByGender('all')">All</button>
                 </div>
 
                 <div class="category-chips">
-                    <a href="{{ route('home') }}" class="chip-btn">All</a>
                     @foreach($categories as $category)
                         <a href="{{ route('home', ['category' => $category->name]) }}" 
                            class="chip-btn {{ request('category') === $category->name ? 'active' : '' }}">
@@ -50,7 +54,7 @@
                                 name="search"
                                 class="input-full"
                                 style="padding-left:2rem;"
-                                placeholder="Try 'bag', 'oversized blazer', 'dress'…"
+                                placeholder="Search products..."
                                 value="{{ request('search') }}"
                             />
                         </div>

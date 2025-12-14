@@ -43,6 +43,11 @@ class HomeController extends Controller
             });
         }
 
+        // Tag filter (for "New Arrivals")
+        if ($request->has('tag') && $request->tag) {
+            $query->where('tags', 'like', "%{$request->tag}%");
+        }
+
         // Sort
         $sort = $request->get('sort', 'featured');
         switch ($sort) {
