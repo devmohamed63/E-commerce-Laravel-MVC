@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CacheController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FavoriteController;
@@ -46,5 +47,11 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 });
+
+// Cache management routes (public)
+Route::get('/cache/clear', [CacheController::class, 'clear'])->name('cache.clear');
+Route::post('/cache/clear', [CacheController::class, 'clear'])->name('cache.clear.post');
+Route::get('/cache/optimize', [CacheController::class, 'optimize'])->name('cache.optimize');
+Route::post('/cache/optimize', [CacheController::class, 'optimize'])->name('cache.optimize.post');
 
 require __DIR__.'/auth.php';

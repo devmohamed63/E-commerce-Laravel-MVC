@@ -30,6 +30,11 @@ body {
   overflow-x: hidden;
 }
 
+/* Hide any unwanted pre elements displaying JSON data */
+pre[data-cursor-element-id] {
+  display: none !important;
+}
+
 img, video {
   max-width: 100%;
   height: auto;

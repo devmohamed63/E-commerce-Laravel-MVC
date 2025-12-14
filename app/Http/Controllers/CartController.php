@@ -9,11 +9,31 @@ class CartController extends Controller
 {
     public function index()
     {
+        // Ensure session is started
+        if (!session()->isStarted()) {
+            session()->start();
+        }
+        
         $cart = session()->get('cart', []);
         $items = [];
         $subtotal = 0;
 
+        // Debug: Log cart data (remove in production)
+        if (config('app.debug')) {
+            \Log::debug('Cart data', [
+                'cart_count' => count($cart),
+                'cart_keys' => array_keys($cart),
+                'session_id' => session()->getId(),
+                'session_driver' => config('session.driver'),
+            ]);
+        }
+
         foreach ($cart as $key => $item) {
+            // Validate item structure
+            if (!isset($item['product_id'])) {
+                continue;
+            }
+            
             $product = Product::with('images')->find($item['product_id']);
             if ($product) {
                 // Get image path - handle both stored path and asset path
@@ -84,7 +104,9 @@ class CartController extends Controller
             ];
         }
 
+        // Save cart to session and ensure it's persisted
         session()->put('cart', $cart);
+        session()->save();
 
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
@@ -110,6 +132,7 @@ class CartController extends Controller
         if (isset($cart[$key])) {
             $cart[$key]['quantity'] = $request->quantity;
             session()->put('cart', $cart);
+            session()->save();
         }
 
         return $this->index();
@@ -121,6 +144,7 @@ class CartController extends Controller
         $key = urldecode($key);
         unset($cart[$key]);
         session()->put('cart', $cart);
+        session()->save();
 
         return $this->index();
     }
