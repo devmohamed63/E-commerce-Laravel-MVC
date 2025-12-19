@@ -104,9 +104,37 @@
 
 <script>
 let currentImageIndex = 0;
-const productImages = @json($product->images->map(function($img) { return asset($img->path); })->values());
+// Group images by color
+const imagesByColor = @json($product->images->groupBy('color')->map(function($images) {
+    return $images->map(function($img) {
+        return asset($img->path);
+    })->values();
+}));
+
+// All images as fallback
+const allImages = @json($product->images->map(function($img) { return asset($img->path); })->values());
+
+let productImages = allImages;
 let selectedSize = '{{ $sizes->first() }}';
 let selectedColor = '{{ $colors->first() ?? "" }}';
+
+// Initialize with first color's images if available
+if (selectedColor && imagesByColor[selectedColor]) {
+    productImages = imagesByColor[selectedColor];
+}
+
+function updateThumbnails() {
+    const thumbsContainer = document.getElementById('pdThumbs');
+    thumbsContainer.innerHTML = '';
+    productImages.forEach((imgSrc, index) => {
+        const thumb = document.createElement('img');
+        thumb.src = imgSrc;
+        thumb.alt = 'Thumbnail ' + (index + 1);
+        thumb.className = 'pd-thumb' + (index === 0 ? ' active' : '');
+        thumb.onclick = () => setImageIndex(index);
+        thumbsContainer.appendChild(thumb);
+    });
+}
 
 function setImageIndex(index) {
     currentImageIndex = index;
@@ -140,6 +168,17 @@ function selectColor(color, button) {
     button.classList.add('active');
     const colorInput = document.getElementById('selectedColor');
     if (colorInput) colorInput.value = color;
+    
+    // Update images based on selected color
+    if (imagesByColor[color] && imagesByColor[color].length > 0) {
+        productImages = imagesByColor[color];
+    } else {
+        productImages = allImages;
+    }
+    
+    currentImageIndex = 0;
+    updateThumbnails();
+    setImageIndex(0);
 }
 </script>
 

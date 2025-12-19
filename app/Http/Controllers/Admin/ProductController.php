@@ -39,7 +39,8 @@ class ProductController extends Controller
             'colors' => 'nullable|array',
             'colors.*' => 'string',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'images.*' => 'nullable|array',
+            'images.*.*' => 'image|mimes:jpeg,png,jpg,gif,webp',
         ]);
 
         $product = Product::create($request->only([
@@ -75,20 +76,42 @@ class ProductController extends Controller
             }
         }
 
-        // Handle image uploads
-        if ($request->hasFile('images')) {
+        // Handle image uploads (now grouped by color)
+        $uploadedImages = $request->file('images');
+        if ($uploadedImages && is_array($uploadedImages)) {
             $sortOrder = 0;
-            foreach ($request->file('images') as $image) {
-                $filename = time() . '_' . $sortOrder . '_' . $image->getClientOriginalName();
-                $path = $image->storeAs('images/products', $filename, 'public');
+            $primaryIndex = $request->input('primary_image_index'); // e.g., "Black_0" or "general_2"
+            $createdImages = [];
+            
+            foreach ($uploadedImages as $color => $images) {
+                // Skip if not an array of files
+                if (!is_array($images)) continue;
                 
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'path' => 'storage/' . $path,
-                    'is_primary' => $sortOrder === 0,
-                    'sort_order' => $sortOrder,
-                ]);
-                $sortOrder++;
+                // If color is 'general', set it to null
+                $imageColor = ($color === 'general') ? null : $color;
+                $colorId = str_replace(' ', '_', $color);
+                
+                foreach ($images as $index => $image) {
+                    $filename = time() . '_' . $sortOrder . '_' . preg_replace('/[^a-zA-Z0-9_.-]/', '_', $image->getClientOriginalName());
+                    $path = $image->storeAs('images/products', $filename, 'public');
+                    
+                    // Check if this image should be primary
+                    $isPrimary = ($primaryIndex === "{$colorId}_{$index}");
+                    
+                    $createdImages[] = ProductImage::create([
+                        'product_id' => $product->id,
+                        'path' => 'storage/' . $path,
+                        'color' => $imageColor,
+                        'is_primary' => $isPrimary,
+                        'sort_order' => $sortOrder,
+                    ]);
+                    $sortOrder++;
+                }
+            }
+            
+            // If no primary was set, make the first image primary
+            if (!$primaryIndex && count($createdImages) > 0) {
+                $createdImages[0]->update(['is_primary' => true]);
             }
         }
 
@@ -118,7 +141,8 @@ class ProductController extends Controller
             'colors' => 'nullable|array',
             'colors.*' => 'string',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'images.*' => 'nullable|array',
+            'images.*.*' => 'image|mimes:jpeg,png,jpg,gif,webp',
             'delete_images' => 'nullable|array',
             'delete_images.*' => 'exists:product_images,id',
         ]);
@@ -156,6 +180,16 @@ class ProductController extends Controller
             }
         }
 
+        // Handle primary image selection
+        if ($request->has('primary_image')) {
+            // Reset all images to non-primary
+            $product->images()->update(['is_primary' => false]);
+            // Set selected image as primary
+            ProductImage::where('id', $request->primary_image)
+                ->where('product_id', $product->id)
+                ->update(['is_primary' => true]);
+        }
+
         // Delete selected images
         if ($request->has('delete_images')) {
             foreach ($request->delete_images as $imageId) {
@@ -169,23 +203,34 @@ class ProductController extends Controller
             }
         }
 
-        // Handle new image uploads
-        if ($request->hasFile('images')) {
+        // Handle new image uploads (grouped by color)
+        $uploadedImages = $request->file('images');
+        if ($uploadedImages && is_array($uploadedImages)) {
             $maxSort = $product->images()->max('sort_order') ?? -1;
             $sortOrder = $maxSort + 1;
             $hasPrimary = $product->images()->where('is_primary', true)->exists();
+            $isFirstImage = !$hasPrimary;
             
-            foreach ($request->file('images') as $image) {
-                $filename = time() . '_' . $sortOrder . '_' . $image->getClientOriginalName();
-                $path = $image->storeAs('images/products', $filename, 'public');
+            foreach ($uploadedImages as $color => $images) {
+                // Skip if not an array of files
+                if (!is_array($images)) continue;
                 
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'path' => 'storage/' . $path,
-                    'is_primary' => !$hasPrimary && $sortOrder === $maxSort + 1,
-                    'sort_order' => $sortOrder,
-                ]);
-                $sortOrder++;
+                $imageColor = ($color === 'general') ? null : $color;
+                
+                foreach ($images as $image) {
+                    $filename = time() . '_' . $sortOrder . '_' . preg_replace('/[^a-zA-Z0-9_.-]/', '_', $image->getClientOriginalName());
+                    $path = $image->storeAs('images/products', $filename, 'public');
+                    
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'path' => 'storage/' . $path,
+                        'color' => $imageColor,
+                        'is_primary' => $isFirstImage,
+                        'sort_order' => $sortOrder,
+                    ]);
+                    $sortOrder++;
+                    $isFirstImage = false;
+                }
             }
         }
 

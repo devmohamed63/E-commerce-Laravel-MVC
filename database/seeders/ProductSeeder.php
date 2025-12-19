@@ -155,24 +155,35 @@ class ProductSeeder extends Seeder
                 'tags' => isset($productData['tags']) ? implode(',', $productData['tags']) : null,
             ]);
 
-            // Create images
-            $allImages = [];
+            // Create images with color association
+            $sortOrder = 0;
             if (isset($productData['colorImages'])) {
-                foreach ($productData['colorImages'] as $colorImages) {
-                    $allImages = array_merge($allImages, $colorImages);
+                // If colorImages is defined, create images for each color
+                foreach ($productData['colorImages'] as $color => $images) {
+                    foreach ($images as $imgIndex => $imagePath) {
+                        ProductImage::create([
+                            'product_id' => $product->id,
+                            'path' => $imagePath,
+                            'color' => $color,
+                            'is_primary' => $sortOrder === 0,
+                            'sort_order' => $sortOrder,
+                        ]);
+                        $sortOrder++;
+                    }
                 }
-                $allImages = array_unique($allImages);
             } else {
-                $allImages = $productData['images'];
-            }
-
-            foreach ($allImages as $sortOrder => $imagePath) {
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'path' => $imagePath,
-                    'is_primary' => $sortOrder === 0,
-                    'sort_order' => $sortOrder,
-                ]);
+                // If no colorImages, create images for the first color (or null)
+                $defaultColor = $productData['colors'][0] ?? null;
+                foreach ($productData['images'] as $imagePath) {
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'path' => $imagePath,
+                        'color' => $defaultColor,
+                        'is_primary' => $sortOrder === 0,
+                        'sort_order' => $sortOrder,
+                    ]);
+                    $sortOrder++;
+                }
             }
 
             // Create variants

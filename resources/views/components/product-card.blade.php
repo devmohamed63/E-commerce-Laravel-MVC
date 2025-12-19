@@ -1,17 +1,33 @@
 @props(['product', 'favorited' => false])
 
 @php
-    $primaryImage = $product->images->first();
+    // Get all product images
+    $allImages = $product->images;
+    // Get the primary image (is_primary = true), or fall back to first image
+    $primaryImage = $allImages->where('is_primary', true)->first() 
+                    ?? $allImages->first();
     $imagePath = $primaryImage ? asset($primaryImage->path) : asset('images/placeholder.png');
     $isFavorited = $favorited ?? false;
     if (!$isFavorited && auth()->check()) {
         $isFavorited = auth()->user()->favorites()->where('product_id', $product->id)->exists();
     }
+    // Prepare images data for JavaScript
+    $imagesData = $allImages->map(fn($img) => asset($img->path))->values()->toArray();
 @endphp
 
-<div class="card">
-    <div class="card-img-wrap" onclick="openProductDetail({{ $product->id }})">
-        <img src="{{ $imagePath }}" alt="{{ $product->name_en }}">
+<div class="card" data-product-id="{{ $product->id }}">
+    <a href="{{ route('products.show', $product) }}" class="card-img-wrap">
+        <img src="{{ $imagePath }}" alt="{{ $product->name_en }}" class="card-main-img" id="card-img-{{ $product->id }}">
+        
+        @if(count($imagesData) > 1)
+            <button type="button" class="card-nav card-nav-left" onclick="event.stopPropagation(); changeCardImage({{ $product->id }}, -1)">‹</button>
+            <button type="button" class="card-nav card-nav-right" onclick="event.stopPropagation(); changeCardImage({{ $product->id }}, 1)">›</button>
+            <div class="card-dots" id="card-dots-{{ $product->id }}">
+                @foreach($imagesData as $index => $img)
+                    <span class="card-dot {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}"></span>
+                @endforeach
+            </div>
+        @endif
         
         @if($product->tags)
             <div class="tag-row">
@@ -48,12 +64,12 @@
                 ♡
             </a>
         @endauth
-    </div>
+    </a>
 
     <div class="card-body">
-        <div class="prod-name" onclick="openProductDetail({{ $product->id }})">
+        <a href="{{ route('products.show', $product) }}" class="prod-name">
             {{ $product->name_en }}
-        </div>
+        </a>
 
         <div class="row-between">
             <div class="rating">
@@ -101,3 +117,44 @@
     </div>
 </div>
 
+@once
+<script>
+// Store product images data
+window.productCardImages = window.productCardImages || {};
+window.productCardIndex = window.productCardIndex || {};
+</script>
+@endonce
+
+<script>
+// Initialize this product's images
+window.productCardImages[{{ $product->id }}] = @json($imagesData);
+window.productCardIndex[{{ $product->id }}] = 0;
+
+function changeCardImage(productId, direction) {
+    const images = window.productCardImages[productId];
+    if (!images || images.length <= 1) return;
+    
+    let currentIndex = window.productCardIndex[productId] || 0;
+    currentIndex += direction;
+    
+    // Loop around
+    if (currentIndex < 0) currentIndex = images.length - 1;
+    if (currentIndex >= images.length) currentIndex = 0;
+    
+    window.productCardIndex[productId] = currentIndex;
+    
+    // Update image
+    const img = document.getElementById('card-img-' + productId);
+    if (img) {
+        img.src = images[currentIndex];
+    }
+    
+    // Update dots
+    const dotsContainer = document.getElementById('card-dots-' + productId);
+    if (dotsContainer) {
+        dotsContainer.querySelectorAll('.card-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentIndex);
+        });
+    }
+}
+</script>

@@ -16,9 +16,16 @@ let isLoadingCart = false;
 async function loadCart() {
     if (isLoadingCart) return; // Prevent multiple simultaneous loads
     isLoadingCart = true;
-    
+
     try {
-        const response = await fetch('/cart');
+        const response = await fetch('/cart', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        });
         cartData = await response.json();
         updateCartUI();
     } catch (error) {
@@ -48,7 +55,7 @@ function updateCartUI() {
 
     // Clear container
     container.innerHTML = '';
-    
+
     if (!cartData.items || cartData.items.length === 0) {
         if (emptyMsg) {
             emptyMsg.classList.remove('hidden');
@@ -69,7 +76,7 @@ function updateCartUI() {
         // Add cart items
         cartData.items.forEach((item, index) => {
             if (!item) return;
-            
+
             const itemDiv = document.createElement('div');
             itemDiv.className = 'cart-item';
             itemDiv.innerHTML = `
@@ -273,7 +280,7 @@ function filterByGender(gender) {
 }
 
 // Event listeners
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const openCartBtn = document.getElementById('openCartBtn');
     const closeCartBtn = document.getElementById('closeCartBtn');
     const cartOverlay = document.getElementById('cartOverlay');
@@ -285,14 +292,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (openCartBtn) openCartBtn.addEventListener('click', openCart);
     if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
     if (cartOverlay) {
-        cartOverlay.addEventListener('click', function(e) {
+        cartOverlay.addEventListener('click', function (e) {
             if (e.target === cartOverlay) closeCart();
         });
     }
 
     if (searchInput) {
         let searchTimeout;
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 const url = new URL(window.location);
@@ -307,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
+        sortSelect.addEventListener('change', function () {
             const url = new URL(window.location);
             url.searchParams.set('sort', this.value);
             window.location.href = url.toString();
@@ -315,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (checkoutForm) {
-        checkoutForm.addEventListener('submit', function(e) {
+        checkoutForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const customerData = JSON.parse(sessionStorage.getItem('customerData') || '{}');
             if (!customerData.name || !customerData.phone || !customerData.address) {
@@ -356,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (customerForm) {
-        customerForm.addEventListener('submit', function(e) {
+        customerForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const data = {
                 name: this.customerName.value,
