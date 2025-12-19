@@ -83,20 +83,26 @@
         @endif
 
         @auth
-            <form method="POST" action="{{ route('cart.add') }}" style="display: inline; width: 100%;">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                <input type="hidden" name="size" id="selectedSize" value="{{ $sizes->first() }}">
-                <input type="hidden" name="color" id="selectedColor" value="{{ $colors->first() ?? '' }}">
-                <input type="hidden" name="redirect" value="{{ url()->current() }}">
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="add-cart-btn" style="width: 100%;">
-                    🛒 Add to cart
-                </button>
-            </form>
+            @if(auth()->user()->is_admin)
+                <a href="{{ route('admin.products.edit', $product) }}" class="add-cart-btn" style="width: 100%; text-decoration: none; display: block; text-align: center; background: var(--text-main);">
+                    Edit Product
+                </a>
+            @else
+                <form method="POST" action="{{ route('cart.add') }}" style="display: inline; width: 100%;">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="size" id="selectedSize" value="{{ $sizes->first() }}">
+                    <input type="hidden" name="color" id="selectedColor" value="{{ $colors->first() ?? '' }}">
+                    <input type="hidden" name="redirect" value="{{ url()->current() }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="add-cart-btn" style="width: 100%;">
+                        Add to cart
+                    </button>
+                </form>
+            @endif
         @else
             <a href="{{ route('login') }}?redirect={{ urlencode(url()->current()) }}" class="add-cart-btn" style="width: 100%; text-decoration: none; display: block; text-align: center;">
-                🛒 Add to cart
+                Add to cart
             </a>
         @endauth
     </div>

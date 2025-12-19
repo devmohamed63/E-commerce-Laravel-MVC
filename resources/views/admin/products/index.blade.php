@@ -33,6 +33,9 @@
                         </div>
                     </div>
                     <div class="admin-list-actions">
+                        <a href="{{ route('products.show', $product) }}" class="admin-btn-secondary" target="_blank" title="View on Store">
+                            View
+                        </a>
                         <a href="{{ route('admin.products.edit', $product) }}" class="admin-btn-secondary">
                             Edit
                         </a>
