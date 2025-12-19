@@ -7,8 +7,14 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // If not an AJAX request, redirect to home page
+        // The cart is designed to work as a side panel, not a standalone page
+        if (!$request->expectsJson() && !$request->ajax()) {
+            return redirect()->route('home');
+        }
+
         // Ensure session is started
         if (!session()->isStarted()) {
             session()->start();
