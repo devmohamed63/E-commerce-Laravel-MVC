@@ -7,7 +7,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.update', $product) }}" class="admin-form-grid">
+            <form method="POST" action="{{ route('admin.products.update', $product) }}" class="admin-form-grid" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="admin-form-group">
@@ -100,6 +100,90 @@
                     @enderror
                 </div>
 
+                <!-- Sizes Selection -->
+                <div class="admin-form-group">
+                    <label class="admin-form-label">Available Sizes *</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem;">
+                        @php
+                            $availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+                            $currentSizes = old('sizes', $product->variants->pluck('size')->unique()->toArray());
+                        @endphp
+                        @foreach($availableSizes as $size)
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 0.5rem; transition: all 0.2s;">
+                                <input type="checkbox" name="sizes[]" value="{{ $size }}" 
+                                       {{ in_array($size, $currentSizes) ? 'checked' : '' }}
+                                       style="width: 1rem; height: 1rem; accent-color: var(--primary-color);">
+                                <span style="font-weight: 500;">{{ $size }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('sizes')
+                        <span style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Colors Selection -->
+                <div class="admin-form-group">
+                    <label class="admin-form-label">Available Colors</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem;">
+                        @php
+                            $availableColors = ['Black', 'White', 'Beige', 'Navy', 'Red', 'Pink', 'Blue', 'Green', 'Gray', 'Brown'];
+                            $currentColors = old('colors', $product->variants->pluck('color')->filter()->unique()->toArray());
+                        @endphp
+                        @foreach($availableColors as $color)
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 0.5rem; transition: all 0.2s;">
+                                <input type="checkbox" name="colors[]" value="{{ $color }}" 
+                                       {{ in_array($color, $currentColors) ? 'checked' : '' }}
+                                       style="width: 1rem; height: 1rem; accent-color: var(--primary-color);">
+                                <span style="font-weight: 500;">{{ $color }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('colors')
+                        <span style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Current Images -->
+                @if($product->images->count() > 0)
+                <div class="admin-form-group">
+                    <label class="admin-form-label">Current Images</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem;">
+                        @foreach($product->images as $image)
+                            <div style="position: relative; width: 100px; height: 100px; border-radius: 0.5rem; overflow: hidden; border: 1px solid var(--border-color);">
+                                <img src="{{ asset($image->path) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                @if($image->is_primary)
+                                    <span style="position: absolute; bottom: 0; left: 0; right: 0; background: var(--primary-color); color: white; font-size: 0.7rem; text-align: center; padding: 0.15rem;">Primary</span>
+                                @endif
+                                <label style="position: absolute; top: 0.25rem; right: 0.25rem; cursor: pointer;">
+                                    <input type="checkbox" name="delete_images[]" value="{{ $image->id }}" style="accent-color: #ef4444;">
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                    <span style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem; display: block;">
+                        Check images to delete them
+                    </span>
+                </div>
+                @endif
+
+                <!-- Add New Images -->
+                <div class="admin-form-group">
+                    <label class="admin-form-label">Add New Images</label>
+                    <div style="border: 2px dashed var(--border-color); border-radius: 0.75rem; padding: 2rem; text-align: center; background: var(--card-bg); cursor: pointer;" 
+                         onclick="document.getElementById('imageInput').click()">
+                        <input type="file" name="images[]" id="imageInput" multiple accept="image/*" 
+                               style="display: none;" onchange="previewImages(this)">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📷</div>
+                        <p style="margin: 0; font-weight: 500; color: var(--text-main);">Click to upload images</p>
+                        <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: var(--text-dim);">PNG, JPG, WEBP up to 5MB each</p>
+                    </div>
+                    <div id="imagePreview" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;"></div>
+                    @error('images.*')
+                        <span style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">{{ $message }}</span>
+                    @enderror
+                </div>
+
                 <div class="admin-form-actions">
                     <button type="submit" class="add-cart-btn">Update Product</button>
                     <a href="{{ route('admin.products.index') }}" class="admin-btn-secondary">Cancel</a>
@@ -107,5 +191,24 @@
             </form>
         </div>
     </div>
-@endsection
 
+    <script>
+        function previewImages(input) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            
+            if (input.files) {
+                Array.from(input.files).forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.style.cssText = 'position: relative; width: 100px; height: 100px; border-radius: 0.5rem; overflow: hidden; border: 1px solid var(--border-color);';
+                        div.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                        preview.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+    </script>
+@endsection
