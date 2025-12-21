@@ -1,9 +1,8 @@
 <header class="navbar">
     <div class="navbar-inner">
         <div class="brand">
-            <div class="brand-icon">👜</div>
             <a href="{{ route('home') }}" style="text-decoration: none; color: inherit;">
-                <span>L&N</span>
+                <img src="/images/locally-logo.png" alt="Locally" style="width: 90px; height: 90px; object-fit: contain;">
             </a>
         </div>
 

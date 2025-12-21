@@ -5,8 +5,7 @@
         <div class="card" style="padding: 1.5rem;">
             <div style="text-align: center; margin-bottom: 2rem;">
                 <div class="brand" style="justify-content: center; margin-bottom: 1rem;">
-                    <div class="brand-icon">👜</div>
-                    <span style="font-size: 1.5rem;">L&N Store</span>
+                    <img src="/images/locally-logo.png" alt="Locally" style="width: 120px; height: 120px; object-fit: contain; background: #0f172a; padding: 12px; border-radius: 20px;">
                 </div>
                 <h1 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">New Password</h1>
                 <p style="color: var(--text-dim); font-size: 0.9rem;">Choose a strong password for your account</p>

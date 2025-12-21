@@ -2,8 +2,7 @@
     <div class="footer-grid">
         <div>
             <div class="footer-col-title" style="display:flex;align-items:center;gap:.5rem;font-weight:600;">
-                <div class="brand-icon" style="width:20px;height:20px;font-size:.6rem;">👜</div>
-                <span>L&N</span>
+                <img src="/images/locally-logo.png" alt="Locally" style="width: 60px; height: 60px; object-fit: contain; background: #0f172a; padding: 8px; border-radius: 12px;">
             </div>
             <p class="footer-text">
                 Modern pieces, clean silhouettes, neutral tones. This is a demo storefront.
@@ -30,7 +29,7 @@
     </div>
 
     <div class="footer-bottom">
-        <span>© {{ date('Y') }} L&N</span>
+        <span>© {{ date('Y') }} Locally</span>
         <span>•</span>
         <span>All rights reserved.</span>
     </div>

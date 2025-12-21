@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Admin - L&N Store</title>
+    <title>Admin - Locally</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -12,7 +12,7 @@
         <div class="navbar-inner">
             <div class="brand">
                 <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: inherit;">
-                    <span>Admin - L&N</span>
+                    <span>Admin - Locally</span>
                 </a>
             </div>
             <div class="nav-right">

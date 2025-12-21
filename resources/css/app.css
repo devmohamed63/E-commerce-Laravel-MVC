@@ -79,9 +79,9 @@ button:active {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.8);
+  background: #0f172a;
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-col);
+  border-bottom: 1px solid #1e293b;
 }
 
 .navbar-inner {
@@ -108,7 +108,7 @@ button:active {
   font-weight: 600;
   font-size: 1rem;
   gap: .5rem;
-  color: var(--text-main);
+  color: #fff;
 }
 
 .brand-icon {
@@ -153,7 +153,9 @@ button:active {
   max-width: 100%;
   padding: .5rem .75rem .5rem 2rem;
   border-radius: var(--radius-full);
-  border: 1px solid var(--border-col);
+  border: 1px solid #374151;
+  background: #1e293b;
+  color: #fff;
   font-size: .85rem;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -182,16 +184,17 @@ button:active {
   left: .6rem;
   transform: translateY(-50%);
   font-size: .8rem;
-  color: var(--text-dim);
+  color: #9ca3af;
   pointer-events: none;
 }
 
 .sort-select {
-  border: 1px solid var(--border-col);
+  border: 1px solid #374151;
   border-radius: var(--radius-full);
   padding: .5rem .75rem;
   font-size: .85rem;
-  background: #fff;
+  background: #1e293b;
+  color: #fff;
   min-width: 120px;
   max-width: 100%;
   outline: none;
