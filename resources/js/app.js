@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (checkoutForm) {
-        checkoutForm.addEventListener('submit', function (e) {
+        checkoutForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             // Get cart from localStorage
@@ -448,29 +448,41 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('cart', JSON.stringify(cart));
             formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
-            fetch('/checkout', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: formData
-            }).then(response => {
-                if (response.redirected) {
-                    // Clear cart after successful checkout
+            console.log('Submitting checkout with cart:', cart);
+            console.log('Customer data:', customerData);
+
+            try {
+                const response = await fetch('/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                console.log('Checkout response status:', response.status);
+
+                const data = await response.json();
+                console.log('Checkout response data:', data);
+
+                if (data.success) {
                     clearCart();
                     localStorage.removeItem('customerData');
-                    window.location.href = response.url;
-                } else {
-                    return response.json();
+                    alert(data.message || 'Order placed successfully!');
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                } else if (data.errors) {
+                    const errorMessages = Object.values(data.errors).flat().join('\n');
+                    alert('Errors:\n' + errorMessages);
+                } else if (data.message) {
+                    alert(data.message);
                 }
-            }).then(data => {
-                if (data && data.errors) {
-                    alert('Please fill in all required fields.');
-                } else if (data && data.success) {
-                    clearCart();
-                    localStorage.removeItem('customerData');
-                }
-            });
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('Failed to place order. Please try again.');
+            }
         });
     }
 

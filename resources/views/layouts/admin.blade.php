@@ -45,6 +45,10 @@
                class="admin-nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                 Orders
             </a>
+            <a href="{{ route('admin.users.index') }}" 
+               class="admin-nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                Users
+            </a>
         </nav>
 
         @if(session('success'))
