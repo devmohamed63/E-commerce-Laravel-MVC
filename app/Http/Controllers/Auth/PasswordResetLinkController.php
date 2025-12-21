@@ -60,7 +60,7 @@ class PasswordResetLinkController extends Controller
         try {
             Mail::raw("Your password reset OTP is: {$otp}\n\nThis OTP will expire in 10 minutes.", function ($message) use ($request) {
                 $message->to($request->email)
-                    ->subject('Password Reset OTP - L&N Store');
+                    ->subject('Password Reset OTP - Locally');
             });
 
             return redirect()->route('password.verify-otp')

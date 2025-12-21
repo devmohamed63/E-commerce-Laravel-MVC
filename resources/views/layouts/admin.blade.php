@@ -11,8 +11,9 @@
     <header class="navbar">
         <div class="navbar-inner">
             <div class="brand">
-                <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: inherit;">
-                    <span>Admin - Locally</span>
+                <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
+                    <img src="/images/locally-logo.png" alt="Locally" style="width: 50px; height: 50px; object-fit: contain;">
+                    <span>Admin Panel</span>
                 </a>
             </div>
             <div class="nav-right">

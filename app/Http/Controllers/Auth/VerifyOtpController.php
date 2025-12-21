@@ -13,7 +13,7 @@ class VerifyOtpController extends Controller
     /**
      * Display the OTP verification view.
      */
-    public function create(Request $request): View
+    public function create(Request $request): View|RedirectResponse
     {
         $email = $request->session()->get('email') ?? $request->get('email');
         
