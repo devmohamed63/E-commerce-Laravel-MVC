@@ -44,7 +44,6 @@
         
         <div class="pd-sizes-block">
             <div class="field-label">
-                <span>🪄</span>
                 <span>Size</span>
             </div>
             <div id="pdSizes" class="card-size-row">
@@ -67,7 +66,6 @@
         @if($colors->count() > 0)
             <div class="pd-colors-block">
                 <div class="field-label">
-                    <span>🎨</span>
                     <span>Color</span>
                 </div>
                 <div id="pdColors" class="card-color-row">

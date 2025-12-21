@@ -82,7 +82,6 @@
 
                         <div class="size-box">
                             <div class="field-label">
-                                <span>🪄</span>
                                 <span>Size</span>
                             </div>
                             <div class="sizes-grid">

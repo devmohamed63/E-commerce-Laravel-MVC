@@ -2402,3 +2402,239 @@ table {
   color: #fff;
   border-color: var(--bg-accent);
 }
+
+/* =========================
+   PRODUCT DETAIL PAGE
+   ========================= */
+.product-detail-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .product-detail-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding: 3rem 2rem;
+  }
+}
+
+/* Image Section */
+.pd-image-wrap {
+  position: relative;
+  background: #f8fafc;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+}
+
+.pd-image-wrap>img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.pd-image-wrap:hover>img {
+  transform: scale(1.02);
+}
+
+/* Image Navigation Arrows */
+.pd-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s;
+  z-index: 10;
+  color: var(--text-main);
+}
+
+.pd-nav:hover {
+  background: var(--bg-accent);
+  color: #fff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.pd-nav-left {
+  left: 1rem;
+}
+
+.pd-nav-right {
+  right: 1rem;
+}
+
+/* Thumbnails */
+.pd-thumbs {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pd-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  opacity: 0.7;
+}
+
+.pd-thumb:hover {
+  opacity: 1;
+}
+
+.pd-thumb.active {
+  border-color: var(--bg-accent);
+  opacity: 1;
+}
+
+/* Info Section */
+.pd-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.pd-info h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .pd-info h2 {
+    font-size: 2rem;
+  }
+}
+
+.pd-rating-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pd-rating-price .rating {
+  color: #f59e0b;
+  font-size: 1rem;
+}
+
+.pd-rating-price .price-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.pd-rating-price .old-price {
+  font-size: 1rem;
+  color: var(--text-dim);
+  text-decoration: line-through;
+  margin-right: 0.5rem;
+}
+
+.pd-rating-price .new-price {
+  color: #ef4444;
+}
+
+/* Size & Color Blocks */
+.pd-sizes-block,
+.pd-colors-block {
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: var(--radius-md);
+}
+
+.pd-sizes-block .field-label,
+.pd-colors-block .field-label {
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pd-sizes-block .field-label span:first-child,
+.pd-colors-block .field-label span:first-child {
+  font-size: 1.3rem;
+}
+
+.card-size-row,
+.card-color-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.size-pill,
+.color-pill {
+  padding: 0.6rem 1.25rem;
+  border: 1px solid var(--border-col);
+  background: #fff;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-main);
+}
+
+.size-pill:hover,
+.color-pill:hover {
+  border-color: var(--bg-accent);
+  background: #f0f9ff;
+}
+
+.size-pill.active,
+.color-pill.active {
+  background: var(--bg-accent);
+  color: #fff;
+  border-color: var(--bg-accent);
+}
+
+/* Add to Cart Button (Product Detail) */
+.pd-info .add-cart-btn {
+  margin-top: 1rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+}
+
+/* Category Badge */
+.pd-info .prod-cat {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+  width: fit-content;
+}
