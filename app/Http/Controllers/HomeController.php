@@ -65,7 +65,7 @@ class HomeController extends Controller
                 break;
         }
 
-        $products = $query->paginate(12);
+        $products = $query->paginate(9);
         $categories = Category::all();
 
         $favorites = [];

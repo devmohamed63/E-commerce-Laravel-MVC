@@ -137,8 +137,26 @@
             @endforelse
         </div>
 
-        <div class="mt-4">
-            {{ $products->links() }}
+        <div class="pagination-wrapper" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; flex-wrap: wrap;">
+            @if ($products->onFirstPage())
+                <span style="padding: 0.75rem 1.5rem; background: #f3f4f6; color: #9ca3af; border-radius: var(--radius-md); cursor: not-allowed;">« Previous</span>
+            @else
+                <a href="{{ $products->previousPageUrl() }}" style="padding: 0.75rem 1.5rem; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-col); border-radius: var(--radius-md); text-decoration: none; transition: all 0.2s;">« Previous</a>
+            @endif
+
+            @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                @if ($page == $products->currentPage())
+                    <span style="padding: 0.75rem 1rem; background: var(--bg-accent); color: #fff; border-radius: var(--radius-md); min-width: 45px; text-align: center;">{{ $page }}</span>
+                @else
+                    <a href="{{ $url }}" style="padding: 0.75rem 1rem; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-col); border-radius: var(--radius-md); text-decoration: none; min-width: 45px; text-align: center; transition: all 0.2s;">{{ $page }}</a>
+                @endif
+            @endforeach
+
+            @if ($products->hasMorePages())
+                <a href="{{ $products->nextPageUrl() }}" style="padding: 0.75rem 1.5rem; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-col); border-radius: var(--radius-md); text-decoration: none; transition: all 0.2s;">Next »</a>
+            @else
+                <span style="padding: 0.75rem 1.5rem; background: #f3f4f6; color: #9ca3af; border-radius: var(--radius-md); cursor: not-allowed;">Next »</span>
+            @endif
         </div>
     </section>
 @endsection

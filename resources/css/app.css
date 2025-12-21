@@ -747,7 +747,7 @@ button:active {
 
 .card-img-wrap {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   cursor: pointer;
 }
@@ -2308,4 +2308,94 @@ table {
     font-size: 0.9rem;
     padding: 0.55rem 0.75rem;
   }
+}
+
+/* =========================
+   PAGINATION
+   ========================= */
+.mt-4 {
+  margin-top: 2rem;
+}
+
+.mt-4 nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mt-4 nav>div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mt-4 nav span,
+.mt-4 nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.mt-4 nav a {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-col);
+}
+
+.mt-4 nav a:hover {
+  background: var(--bg-accent);
+  color: #fff;
+  border-color: var(--bg-accent);
+  transform: translateY(-1px);
+}
+
+.mt-4 nav span[aria-current="page"],
+.mt-4 nav span.font-medium {
+  background: var(--bg-accent);
+  color: #fff;
+  border: 1px solid var(--bg-accent);
+}
+
+.mt-4 nav span[aria-disabled="true"],
+.mt-4 nav span.cursor-default {
+  background: #f3f4f6;
+  color: #9ca3af;
+  border: 1px solid var(--border-col);
+  cursor: not-allowed;
+}
+
+/* Simple pagination (Previous/Next) styling */
+.mt-4>span,
+.mt-4>a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-col);
+  margin: 0 0.25rem;
+}
+
+.mt-4>a:hover {
+  background: var(--bg-accent);
+  color: #fff;
+  border-color: var(--bg-accent);
 }
