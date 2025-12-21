@@ -504,6 +504,69 @@ document.addEventListener('DOMContentLoaded', function () {
             cartCount.textContent = count;
         }
     }
+
+    // Newsletter subscription
+    const newsletterBtn = document.getElementById('newsletterBtn');
+    const newsletterInput = document.getElementById('newsletterInput');
+
+    if (newsletterBtn && newsletterInput) {
+        newsletterBtn.addEventListener('click', async function () {
+            const email = newsletterInput.value.trim();
+
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+
+            // Simple email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            const originalText = newsletterBtn.textContent;
+            newsletterBtn.textContent = '...';
+            newsletterBtn.disabled = true;
+
+            try {
+                const response = await fetch('/newsletter/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    newsletterBtn.textContent = '✓';
+                    newsletterInput.value = '';
+                    alert(data.message);
+                } else {
+                    alert(data.message || 'Something went wrong.');
+                }
+            } catch (error) {
+                console.error('Newsletter subscription error:', error);
+                alert('Failed to subscribe. Please try again.');
+            } finally {
+                setTimeout(() => {
+                    newsletterBtn.textContent = originalText;
+                    newsletterBtn.disabled = false;
+                }, 2000);
+            }
+        });
+
+        // Allow Enter key to submit
+        newsletterInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                newsletterBtn.click();
+            }
+        });
+    }
 });
 
 // ==========================================
