@@ -29,7 +29,10 @@
         </div>
     </div>
 
-    <div class="footer-bottom">All rights reserved. • L&N</div>
-    <div class="footer-bottom">© {{ date('Y') }} L&N</div>
+    <div class="footer-bottom">
+        <span>© {{ date('Y') }} L&N</span>
+        <span>•</span>
+        <span>All rights reserved.</span>
+    </div>
 </footer>
 

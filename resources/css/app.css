@@ -1106,11 +1106,17 @@ button:active {
 }
 
 .footer-bottom {
-  font-size: .7rem;
+  font-size: .85rem;
   color: var(--text-dim);
-  padding: 0 1rem 2rem;
+  padding: 1rem 1rem 2rem;
   max-width: 1280px;
   margin: 0 auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 /* =========================

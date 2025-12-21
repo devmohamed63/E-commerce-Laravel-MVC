@@ -22,4 +22,34 @@ class ProductController extends Controller
 
         return view('product.show', ['product' => $product, 'favorited' => $favorited, 'standalone' => true]);
     }
+
+    /**
+     * Return product details as JSON for the cart
+     */
+    public function apiShow(Product $product)
+    {
+        $product->load(['images', 'variants']);
+        
+        $primaryImage = $product->images->first();
+        $imagePath = $primaryImage ? asset($primaryImage->path) : asset('images/placeholder.svg');
+        
+        return response()->json([
+            'id' => $product->id,
+            'name' => $product->name_en,
+            'name_en' => $product->name_en,
+            'name_ar' => $product->name_ar,
+            'base_price' => $product->base_price,
+            'price' => $product->base_price,
+            'image' => $imagePath,
+            'variants' => $product->variants->map(function ($variant) {
+                return [
+                    'size' => $variant->size,
+                    'color' => $variant->color,
+                    'price' => $variant->price,
+                    'stock' => $variant->stock,
+                ];
+            }),
+        ]);
+    }
 }
+

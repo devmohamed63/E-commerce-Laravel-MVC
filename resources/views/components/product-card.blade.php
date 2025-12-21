@@ -6,7 +6,7 @@
     // Get the primary image (is_primary = true), or fall back to first image
     $primaryImage = $allImages->where('is_primary', true)->first() 
                     ?? $allImages->first();
-    $imagePath = $primaryImage ? asset($primaryImage->path) : asset('images/placeholder.png');
+    $imagePath = $primaryImage ? asset($primaryImage->path) : asset('images/placeholder.svg');
     $isFavorited = $favorited ?? false;
     if (!$isFavorited && auth()->check()) {
         $isFavorited = auth()->user()->favorites()->where('product_id', $product->id)->exists();
@@ -101,19 +101,10 @@
                     $defaultSize = $product->variants->first()->size ?? 'One Size';
                     $defaultColor = $product->variants->where('size', $defaultSize)->first()->color ?? null;
                 @endphp
-                <form method="POST" action="{{ route('cart.add') }}" style="display: inline; width: 100%;">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="size" value="{{ $defaultSize }}">
-                    <input type="hidden" name="redirect" value="{{ url()->current() }}">
-                    @if($defaultColor)
-                        <input type="hidden" name="color" value="{{ $defaultColor }}">
-                    @endif
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="add-cart-btn" style="width: 100%;">
-                        Add to cart
-                    </button>
-                </form>
+                <button type="button" class="add-cart-btn" style="width: 100%;"
+                    onclick="handleAddToCart({{ $product->id }}, '{{ $defaultSize }}', '{{ $defaultColor ?? '' }}', this)">
+                    Add to cart
+                </button>
             @endif
         @else
             <a href="{{ route('login') }}?redirect={{ urlencode(url()->current()) }}" class="add-cart-btn" style="width: 100%; text-decoration: none; display: block; text-align: center;">

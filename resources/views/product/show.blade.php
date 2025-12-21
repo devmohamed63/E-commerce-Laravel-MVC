@@ -11,7 +11,7 @@
 <div class="product-detail-content">
     <div class="pd-image-wrap">
         <button type="button" id="pdPrev" class="pd-nav pd-nav-left" onclick="showPrevImage()">‹</button>
-        <img id="pdImage" src="{{ asset($product->images->first()->path ?? 'images/placeholder.png') }}" alt="{{ $product->name_en }}">
+        <img id="pdImage" src="{{ asset($product->images->first()->path ?? 'images/placeholder.svg') }}" alt="{{ $product->name_en }}">
         <button type="button" id="pdNext" class="pd-nav pd-nav-right" onclick="showNextImage()">›</button>
         <div id="pdThumbs" class="pd-thumbs">
             @foreach($product->images as $index => $image)
@@ -88,17 +88,10 @@
                     Edit Product
                 </a>
             @else
-                <form method="POST" action="{{ route('cart.add') }}" style="display: inline; width: 100%;">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="size" id="selectedSize" value="{{ $sizes->first() }}">
-                    <input type="hidden" name="color" id="selectedColor" value="{{ $colors->first() ?? '' }}">
-                    <input type="hidden" name="redirect" value="{{ url()->current() }}">
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="add-cart-btn" style="width: 100%;">
-                        Add to cart
-                    </button>
-                </form>
+                <button type="button" class="add-cart-btn" style="width: 100%;" id="addToCartBtn"
+                    onclick="handleAddToCartFromDetail({{ $product->id }})">
+                    Add to cart
+                </button>
             @endif
         @else
             <a href="{{ route('login') }}?redirect={{ urlencode(url()->current()) }}" class="add-cart-btn" style="width: 100%; text-decoration: none; display: block; text-align: center;">
