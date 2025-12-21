@@ -80,28 +80,19 @@
                     </div>
                 </div>
 
-                <!-- Remember Me & Forgot Password -->
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
-                    <label for="remember_me" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                        <input 
-                            id="remember_me" 
-                            type="checkbox" 
-                            name="remember"
-                            style="width: 16px; height: 16px; cursor: pointer;"
-                        />
-                        <span style="color: var(--text-dim);">Remember me</span>
-                    </label>
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" style="color: var(--bg-accent); text-decoration: none;">
-                            Forgot password?
-                        </a>
-                    @endif
-                </div>
-
                 <!-- Submit Button -->
                 <button type="submit" class="add-cart-btn" style="width: 100%; margin-top: 0.5rem;">
                     Log In
                 </button>
+
+                <!-- Forgot Password -->
+                @if (Route::has('password.request'))
+                    <div style="text-align: center; font-size: 0.85rem; margin-top: 0.5rem;">
+                        <a href="{{ route('password.request') }}" style="color: var(--bg-accent); text-decoration: none;">
+                            Forgot password?
+                        </a>
+                    </div>
+                @endif
             </form>
 
             <!-- Register Link -->
