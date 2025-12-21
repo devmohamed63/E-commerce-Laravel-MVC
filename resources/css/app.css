@@ -1025,9 +1025,9 @@ button:active {
    FOOTER
    ========================= */
 .footer {
-  border-top: 1px solid var(--border-col);
+  border-top: 1px solid #1e293b;
   margin-top: 3rem;
-  background: #fff;
+  background: #0f172a;
 }
 
 .footer-grid {
@@ -1048,12 +1048,12 @@ button:active {
   font-size: .9rem;
   font-weight: 600;
   margin-bottom: .75rem;
-  color: var(--text-main);
+  color: #fff;
 }
 
 .footer-text {
   font-size: .8rem;
-  color: var(--text-dim);
+  color: #9ca3af;
   line-height: 1.4;
   max-width: 320px;
 }
@@ -1063,7 +1063,7 @@ button:active {
   padding: 0;
   margin: 0;
   font-size: .8rem;
-  color: var(--text-dim);
+  color: #9ca3af;
   line-height: 1.4;
 }
 
@@ -1079,7 +1079,9 @@ button:active {
 
 .newsletter-input {
   border-radius: var(--radius-full);
-  border: 1px solid var(--border-col);
+  border: 1px solid #374151;
+  background: #1e293b;
+  color: #fff;
   padding: .6rem .75rem;
   font-size: .8rem;
   flex: 1 1 auto;
@@ -1110,7 +1112,7 @@ button:active {
 
 .footer-bottom {
   font-size: .85rem;
-  color: var(--text-dim);
+  color: #9ca3af;
   padding: 1rem 1rem 2rem;
   max-width: 1280px;
   margin: 0 auto;
@@ -1120,6 +1122,7 @@ button:active {
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+  border-top: 1px solid #1e293b;
 }
 
 /* =========================
